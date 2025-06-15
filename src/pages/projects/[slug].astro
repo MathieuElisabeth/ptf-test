@@ -1,0 +1,506 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+import projects from '../../assets/json/projects.json';
+
+export async function getStaticPaths() {
+  return projects.map((project, index) => ({
+    params: { slug: project.name.toLowerCase().replace(/\s+/g, '-') },
+    props: { project, index }
+  }));
+}
+
+const { project, index } = Astro.props;
+const { name, description, image, live_url, github_url, languages } = project;
+---
+
+<Layout title={`${name} | Mathieu Elisabeth`} description={description}>
+  <Navbar />
+  
+  <main class="project-detail">
+    <div class="project-hero">
+      <div class="project-image-container">
+        <img 
+          src={image} 
+          alt={`Capture d'écran du projet ${name}`}
+          class="project-hero-image"
+          id="project-hero-image"
+        />
+        <div class="project-overlay"></div>
+      </div>
+      
+      <div class="project-content">
+        <nav aria-label="Fil d'Ariane" class="breadcrumb">
+          <ol>
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/#projets">Projets</a></li>
+            <li aria-current="page">{name}</li>
+          </ol>
+        </nav>
+        
+        <header class="project-header">
+          <h1>{name}</h1>
+          <div class="project-languages" role="list" aria-label="Technologies utilisées">
+            {languages.map((lang) => (
+              <span class="language-tag" role="listitem">{lang}</span>
+            ))}
+          </div>
+        </header>
+        
+        <section class="project-description">
+          <h2 class="sr-only">Description du projet</h2>
+          <p>{description}</p>
+        </section>
+        
+        <div class="project-actions">
+          <a 
+            href={live_url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="btn btn-primary"
+            aria-label={`Voir le projet ${name} en ligne (ouvre dans un nouvel onglet)`}
+          >
+            <i class="fas fa-external-link-alt" aria-hidden="true"></i>
+            Voir le projet
+          </a>
+          <a 
+            href={github_url} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="btn btn-secondary"
+            aria-label={`Voir le code source de ${name} sur GitHub (ouvre dans un nouvel onglet)`}
+          >
+            <i class="fab fa-github" aria-hidden="true"></i>
+            Code source
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <section class="project-details">
+      <div class="container">
+        <h2>Détails techniques</h2>
+        <div class="tech-grid">
+          <div class="tech-item">
+            <h3>Technologies</h3>
+            <ul>
+              {languages.map((lang) => (
+                <li>{lang}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="tech-item">
+            <h3>Type de projet</h3>
+            <p>Application web</p>
+          </div>
+          <div class="tech-item">
+            <h3>Statut</h3>
+            <p>Terminé</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section class="project-navigation">
+      <div class="container">
+        <h2 class="sr-only">Navigation entre projets</h2>
+        <div class="nav-links">
+          {index > 0 && (
+            <a 
+              href={`/projects/${projects[index - 1].name.toLowerCase().replace(/\s+/g, '-')}`}
+              class="nav-link prev"
+              aria-label={`Projet précédent: ${projects[index - 1].name}`}
+            >
+              <i class="fas fa-arrow-left" aria-hidden="true"></i>
+              <span>
+                <small>Précédent</small>
+                <strong>{projects[index - 1].name}</strong>
+              </span>
+            </a>
+          )}
+          
+          {index < projects.length - 1 && (
+            <a 
+              href={`/projects/${projects[index + 1].name.toLowerCase().replace(/\s+/g, '-')}`}
+              class="nav-link next"
+              aria-label={`Projet suivant: ${projects[index + 1].name}`}
+            >
+              <span>
+                <small>Suivant</small>
+                <strong>{projects[index + 1].name}</strong>
+              </span>
+              <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          )}
+        </div>
+        
+        <a href="/#projets" class="back-to-projects">
+          <i class="fas fa-grid-3x3" aria-hidden="true"></i>
+          Tous les projets
+        </a>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style lang="scss">
+  .project-detail {
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--white);
+  }
+
+  .project-hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .project-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .project-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(29, 29, 29, 0.8) 0%,
+      rgba(29, 29, 29, 0.4) 100%
+    );
+    z-index: 2;
+  }
+
+  .project-content {
+    position: relative;
+    z-index: 3;
+    padding: 0 200px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+
+    @media (max-width: 1024px) {
+      padding: 0 70px;
+    }
+
+    @media (max-width: 600px) {
+      padding: 0 20px;
+    }
+  }
+
+  .breadcrumb {
+    margin-bottom: 2rem;
+
+    ol {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: var(--fz-sm);
+      color: var(--light-slate);
+    }
+
+    li {
+      &:not(:last-child)::after {
+        content: '/';
+        margin-left: 0.5rem;
+        color: var(--slate);
+      }
+
+      &:last-child {
+        color: var(--white);
+      }
+    }
+
+    a {
+      color: var(--light-slate);
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: var(--green);
+      }
+    }
+  }
+
+  .project-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin: 0 0 1rem 0;
+      font-weight: bold;
+      line-height: 1.1;
+    }
+  }
+
+  .project-languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .language-tag {
+    background: rgba(100, 255, 218, 0.1);
+    color: var(--green);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: var(--fz-xs);
+    font-weight: 500;
+    border: 1px solid var(--green);
+  }
+
+  .project-description {
+    margin-bottom: 2rem;
+
+    p {
+      font-size: var(--fz-lg);
+      line-height: 1.6;
+      color: var(--light-slate);
+      max-width: 600px;
+    }
+  }
+
+  .project-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-size: var(--fz-md);
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid;
+
+    &.btn-primary {
+      background: var(--green);
+      color: var(--dark-navy);
+      border-color: var(--green);
+
+      &:hover {
+        background: transparent;
+        color: var(--green);
+      }
+    }
+
+    &.btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border-color: var(--white);
+
+      &:hover {
+        background: var(--white);
+        color: var(--dark-navy);
+      }
+    }
+  }
+
+  .project-details {
+    padding: 100px 0;
+    background: #f5f5f5;
+    color: var(--dark-navy);
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 200px;
+
+      @media (max-width: 1024px) {
+        padding: 0 70px;
+      }
+
+      @media (max-width: 600px) {
+        padding: 0 20px;
+      }
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .tech-item {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      margin: 0 0 1rem 0;
+      color: var(--dark-navy);
+      font-size: var(--fz-lg);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0.25rem 0;
+        color: var(--slate);
+        text-transform: capitalize;
+      }
+    }
+
+    p {
+      margin: 0;
+      color: var(--slate);
+    }
+  }
+
+  .project-navigation {
+    padding: 50px 0;
+    background: var(--bg-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 200px;
+
+      @media (max-width: 1024px) {
+        padding: 0 70px;
+      }
+
+      @media (max-width: 600px) {
+        padding: 0 20px;
+      }
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    max-width: 300px;
+
+    &:hover {
+      background: rgba(100, 255, 218, 0.1);
+      transform: translateY(-2px);
+    }
+
+    &.next {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    span {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      small {
+        font-size: var(--fz-xs);
+        color: var(--light-slate);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      strong {
+        font-size: var(--fz-md);
+        color: var(--white);
+      }
+    }
+
+    i {
+      color: var(--green);
+      font-size: 1.2rem;
+    }
+  }
+
+  .back-to-projects {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    color: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    max-width: 200px;
+
+    &:hover {
+      background: var(--green);
+      color: var(--dark-navy);
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Animate hero image on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const heroImage = document.getElementById('project-hero-image');
+    const content = document.querySelector('.project-content');
+    
+    if (heroImage && content) {
+      // Initial state
+      gsap.set(heroImage, { scale: 1.2, opacity: 0 });
+      gsap.set(content, { y: 50, opacity: 0 });
+      
+      // Animate in
+      const tl = gsap.timeline();
+      tl.to(heroImage, { scale: 1, opacity: 1, duration: 1, ease: 'power3.out' })
+        .to(content, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+    }
+  });
+</script>
+</Layout>

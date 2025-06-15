@@ -1,0 +1,227 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Portfolio de Mathieu Elisabeth, développeur front-end spécialisé en React et expériences web immersives." } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="keywords"
+      content="Mathieu Elisabeth, développeur front-end, React, Three.js, web 3D, design, animation, développeur web freelance, portfolio développeur"
+    />
+    <meta name="author" content="Mathieu Elisabeth" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Mathieu Elisabeth – Développeur Front-End React"
+    />
+    <meta
+      property="og:description"
+      content="Découvrez mon portfolio de développeur React passionné par les interfaces immersives, le design et la 3D sur le web."
+    />
+    <meta property="og:image" content="/images/preview.jpg" />
+    <meta property="og:url" content="https://mathieuelisabeth.fr" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Mathieu Elisabeth – Développeur Front-End React & 3D"
+    />
+    <meta
+      name="twitter:description"
+      content="Passionné par la création d'expériences web immersives avec React, animations et Three.js."
+    />
+    <meta name="twitter:image" content="/images/preview.jpg" />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <title>{title}</title>
+
+    <script src="/gsap/ScrollSmoother.min.js"></script>
+    <script src="/gsap/SplitText.min.js"></script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --font-sans: "Jost", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
+    --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+    --dark-navy: #020c1b;
+    --navy: #0a192f;
+    --light-navy: #112240;
+    --lightest-navy: #233554;
+    --transparent-navy: #0a192fd9;
+    --navy-shadow: rgba(2, 12, 27, 0.7);
+    --dark-slate: #495670;
+    --slate: #8892b0;
+    --light-slate: #a8b2d1;
+    --lightest-slate: #ccd6f6;
+    --white: #fafafa;
+    --green: #64ffda;
+    --green-tint: rgba(100, 255, 218, 0.1);
+    --bg-color: #1d1d1d;
+    --fz-xxs: 0.75rem;
+    --fz-xs: 0.8125rem;
+    --fz-sm: 0.875rem;
+    --fz-md: 1rem;
+    --fz-lg: 1.125rem;
+    --fz-xl: 1.25rem;
+    --fz-xxl: 1.375rem;
+    --fz-heading: 2rem;
+    --marquee-width: 80vw;
+    --marquee-height: 20vh;
+    --marquee-elements-displayed: 5;
+    --marquee-element-width: calc(var(--marquee-width) / var(--marquee-elements-displayed));
+    --marquee-animation-duration: calc(var(--marquee-elements) * 3s);
+  }
+
+  @media (max-width: 900px) {
+    :root {
+      --marquee-width: 100vw;
+      --marquee-height: 16vh;
+      --marquee-elements-displayed: 3;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background-color: var(--bg-color);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  section {
+    position: relative;
+    top: 0;
+    padding: 0 200px;
+  }
+
+  section > h2 {
+    font-size: 30px;
+  }
+
+  .main {
+    overflow: hidden;
+  }
+
+  .hero-placeholder {
+    height: 100vh;
+    pointer-events: none;
+  }
+
+  #smooth-wrapper {
+    z-index: 1;
+  }
+
+  @media screen and (max-width: 500px) {
+    section {
+      padding: 0 20px;
+    }
+  }
+
+  /* Accessibility improvements */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Focus styles for better accessibility */
+  a:focus,
+  button:focus {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+
+  /* Reduced motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Page transition styles */
+  .page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  .project-image-transition {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: none;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+</style>

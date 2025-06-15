@@ -1,0 +1,106 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import MyProjects from '../components/MyProjects.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import LoadingScreen from '../components/LoadingScreen.jsx';
+import Canvas from '../components/Canvas.jsx';
+---
+
+<Layout title="Mathieu Elisabeth | Portfolio">
+  <LoadingScreen client:load />
+  <div id="smooth-wrapper">
+    <div id="smooth-content">
+      <Navbar />
+      <main class="main">
+        <Hero />
+        <About />
+        <MyProjects />
+        <Contact />
+      </main>
+      <Footer />
+      <Canvas client:load />
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { ReactLenis } from 'lenis/react';
+
+  gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+  ScrollTrigger.normalizeScroll(true);
+
+  // Initialize smooth scrolling
+  const lenis = new Lenis({
+    autoRaf: false,
+    syncTouch: true,
+    syncTouchLerp: 0.1
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+
+  // Page transition functionality
+  function initPageTransitions() {
+    const projectLinks = document.querySelectorAll('[data-project-link]');
+    
+    projectLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        const projectId = link.getAttribute('data-project-id');
+        const imageElement = link.querySelector('img');
+        
+        if (imageElement) {
+          animateToProjectPage(imageElement, projectId);
+        }
+      });
+    });
+  }
+
+  function animateToProjectPage(imageElement, projectId) {
+    const rect = imageElement.getBoundingClientRect();
+    
+    // Create transition image
+    const transitionImage = document.createElement('div');
+    transitionImage.className = 'project-image-transition';
+    transitionImage.style.cssText = `
+      left: ${rect.left}px;
+      top: ${rect.top}px;
+      width: ${rect.width}px;
+      height: ${rect.height}px;
+      background-image: url(${imageElement.src});
+      background-size: cover;
+      background-position: center;
+    `;
+    
+    document.body.appendChild(transitionImage);
+    
+    // Animate image to full screen
+    gsap.to(transitionImage, {
+      left: 0,
+      top: 0,
+      width: '100vw',
+      height: '100vh',
+      duration: 0.8,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        // Navigate to project page
+        window.location.href = `/projects/${projectId}`;
+      }
+    });
+  }
+
+  // Initialize when DOM is loaded
+  document.addEventListener('DOMContentLoaded', initPageTransitions);
+</script>
+</Layout>

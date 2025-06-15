@@ -1,0 +1,147 @@
+---
+---
+
+<section class="about-section" id="about">
+  <h2>À propos de moi</h2>
+  <div class="about-container">
+    <div class="about-description split-me">
+      <p>
+        Salut ! Je m'appelle Mathieu Elisabeth, développeur front-end
+        passionné par la création d'expériences web immersives.
+      </p>
+
+      <p>
+        Autodidacte depuis 2020, j'ai rapidement développé un goût prononcé
+        pour le design, ce qui m'a naturellement orienté vers le
+        développement front-end et l'écosystème React. J'aime créer des
+        interfaces modernes, interactives et engageantes.
+      </p>
+
+      <p>
+        Même si le front-end est mon domaine de prédilection, j'ai aussi
+        exploré le back-end, afin de mieux comprendre l'ensemble d'une
+        application web. Cette approche fullstack me permet de concevoir des
+        projets cohérents, performants et bien pensés, du front au back.
+      </p>
+
+      <p>
+        Ces dernières années, je me suis particulièrement intéressé à la 3D
+        sur le web, aux animations et aux expériences interactives,
+        notamment avec Three.js. Ce qui me motive chaque jour, c'est la
+        créativité, la résolution de problèmes, et l'envie constante
+        d'apprendre de nouvelles technologies.
+      </p>
+
+      <p>
+        Si vous souhaitez en savoir plus sur mes projets ou discuter
+        collaboration, n'hésitez pas à me contacter !
+      </p>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .about-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #f5f5f5;
+    padding: 200px 0;
+    margin: auto;
+    min-height: 100vh;
+    z-index: 2;
+    border-radius: 5px 5px 0 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 90%;
+
+    h2 {
+      text-align: center;
+      color: var(--bg-color);
+    }
+  }
+
+  .about-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 200px;
+
+    @media (max-width: 1024px) {
+      padding: 0 70px;
+    }
+
+    @media (max-width: 600px) {
+      padding: 0 8px;
+    }
+  }
+
+  .about-description {
+    font-family: var(--font-sans);
+    color: var(--bg-color);
+    font-size: var(--fz-lg);
+
+    .line-wrapper {
+      overflow: hidden;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.querySelector('.about-section');
+    
+    if (section) {
+      // Section width animation
+      gsap.fromTo(
+        section,
+        { width: '90%' },
+        {
+          width: '100%',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top bottom',
+            end: '20%',
+            scrub: true,
+          },
+          ease: 'power3.out',
+        }
+      );
+
+      // Text animation
+      if (typeof SplitText !== 'undefined') {
+        new SplitText('.split-me p', {
+          type: 'lines',
+          linesClass: 'line line++',
+        });
+
+        document.querySelectorAll('.split-me .line').forEach((element) => {
+          const wrapper = document.createElement('div');
+          wrapper.classList.add('line-wrapper');
+          element.parentNode.insertBefore(wrapper, element);
+          wrapper.appendChild(element);
+        });
+
+        const lines = gsap.utils.toArray('.line');
+        gsap.from(lines, {
+          duration: 0.8,
+          yPercent: 100,
+          opacity: 0,
+          ease: 'power4',
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top+=40%',
+          },
+        });
+      }
+    }
+  });
+</script>

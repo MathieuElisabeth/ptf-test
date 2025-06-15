@@ -1,0 +1,74 @@
+---
+---
+
+<footer class="footer-container" role="contentinfo">
+  <div class="footer-left">
+    <a href="/" aria-label="Retour à l'accueil">
+      <svg viewBox="0 0 54 56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M52.9453 38.5156V44H34.7812V38.5156H52.9453ZM37.0781 9.875V44H30.0469V9.875H37.0781ZM50.5781 23.7734V29.1172H34.7812V23.7734H50.5781ZM52.9219 9.875V15.3828H34.7812V9.875H52.9219Z" />
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M26.7422 9.875H29V20.1038L20.3672 44H15.5859L6.35504 18.4483L7.05469 34.2969V44H0.046875V9.875H3.25781H5.97656H9.21094L17.9766 34.9297L26.7422 9.875ZM28.9998 32L29 31.9963V32H28.9998Z"
+        />
+      </svg>
+    </a>
+  </div>
+  <div class="footer-right">
+    <p>Made with ❤️ by Mathieu Elisabeth</p>
+  </div>
+</footer>
+
+<style lang="scss">
+  .footer-container {
+    position: relative;
+    width: 100%;
+    height: 70px;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 5;
+  }
+
+  .footer-left {
+    padding-left: 50px;
+
+    a {
+      color: var(--white);
+      font-size: var(--fz-xxl);
+      font-weight: bold;
+      font-family: var(--font-sans);
+
+      svg {
+        height: 40px;
+        fill: var(--white);
+        transition: fill 0.3s ease;
+      }
+
+      &:hover svg {
+        fill: var(--green);
+      }
+    }
+
+    @media (max-width: 480px) {
+      padding-left: 10px;
+    }
+  }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    padding-right: 50px;
+
+    p {
+      margin: 0;
+      color: var(--light-slate);
+    }
+
+    @media (max-width: 480px) {
+      padding-right: 10px;
+      font-size: 10px;
+    }
+  }
+</style>
