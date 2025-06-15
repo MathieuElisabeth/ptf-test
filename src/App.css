@@ -1,0 +1,45 @@
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-color);
+  color: var(--white);
+  overflow: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+section {
+  position: relative;
+  top: 0;
+  padding: 0 200px;
+}
+
+section > h2 {
+  font-size: 30px;
+}
+
+.main {
+  overflow: hidden;
+}
+
+.hero-placeholder {
+  height: 100vh;
+  pointer-events: none;
+}
+
+#smooth-wrapper {
+  z-index: 1;
+}
+
+@media screen and (max-width: 500px) {
+  section {
+    padding: 0 20px;
+  }
+}

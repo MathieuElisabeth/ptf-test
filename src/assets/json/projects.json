@@ -1,0 +1,71 @@
+[
+  {
+    "name": "Manga Scan",
+    "description": "Site de lecture en ligne de manga. Retrouvez vos mangas préférés et lisez les !",
+    "image": "/images/projects/manga-scan.webp",
+    "live_url": "https://manga-scan.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth/manga-scan/tree/master",
+    "languages": [
+      "javascript",
+      "react",
+      "node"
+    ]
+  },
+  {
+    "name": "Taskphase",
+    "description": "Il s'agit d'une application de gestion de tâches réalisée en Vue 3. Utilisant Vue-router, vuedraggable et Pinia.",
+    "image": "/images/projects/taskphase.webp",
+    "live_url": "https://taskphase.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth/task-management",
+    "languages": [
+      "javascript",
+      "vue"
+    ]
+  },
+  {
+    "name": "FooDeli",
+    "description": "Application Web de livraison de nourriture faite en React, Redux et Firebase.",
+    "image": "/images/projects/foodeli.webp",
+    "live_url": "https://foodeli.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth/food-delivery-app",
+    "languages": [
+      "javascript",
+      "react"
+    ]
+  },
+  {
+    "name": "La recette",
+    "description": "Web app de recette. Créez, partagez et cuisinez vos recettes préférées.",
+    "image": "/images/projects/larecette.webp",
+    "live_url": "http://larecette-xi.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth",
+    "languages": [
+      "typescript",
+      "react",
+      "node"
+    ]
+  },
+  {
+    "name": "Procedural Map",
+    "description": "Map généré aléatoirement en Three.js.",
+    "image": "/images/projects/procedural-map.png",
+    "live_url": "https://procedural-map.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth/procedural-map",
+    "languages": [
+      "javascript",
+      "threejs"
+    ]
+  },
+  {
+    "name": "3Donut",
+    "description": "Reproduction en Three.js de l'animation donut du youtubeur Blender Guru.",
+    "image": "/images/projects/3donut.webp",
+    "live_url": "https://3d-donut-zeta.vercel.app/",
+    "github_url": "https://github.com/MathieuElisabeth/3D-donut",
+    "languages": [
+      "javascript",
+      "react",
+      "threejs"
+    ]
+  }
+]

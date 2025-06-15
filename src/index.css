@@ -1,0 +1,46 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"); */
+
+:root {
+  --font-sans: "Jost", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Fira Mono", "Roboto Mono",
+    monospace;
+  --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+  --dark-navy: #020c1b;
+  --navy: #0a192f;
+  --light-navy: #112240;
+  --lightest-navy: #233554;
+  --transparent-navy: #0a192fd9;
+  --navy-shadow: rgba(2, 12, 27, 0.7);
+  --dark-slate: #495670;
+  --slate: #8892b0;
+  --light-slate: #a8b2d1;
+  --lightest-slate: #ccd6f6;
+  --white: #fafafa;
+  --green: #64ffda;
+  --green-tint: rgba(100, 255, 218, 0.1);
+  --bg-color: #1d1d1d;
+  --fz-xxs: 0.75rem;
+  --fz-xs: 0.8125rem;
+  --fz-sm: 0.875rem;
+  --fz-md: 1rem;
+  --fz-lg: 1.125rem;
+  --fz-xl: 1.25rem;
+  --fz-xxl: 1.375rem;
+  --fz-heading: 2rem;
+  --marquee-width: 80vw;
+  --marquee-height: 20vh;
+  --marquee-elements-displayed: 5;
+  --marquee-element-width: calc(
+    var(--marquee-width) / var(--marquee-elements-displayed)
+  );
+  --marquee-animation-duration: calc(var(--marquee-elements) * 3s);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --marquee-width: 100vw;
+    --marquee-height: 16vh;
+    --marquee-elements-displayed: 3;
+  }
+}
