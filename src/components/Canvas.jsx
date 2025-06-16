@@ -10,6 +10,7 @@ import { PerformanceMonitor } from "@react-three/drei";
 const Canvas = forwardRef((props, ref) => {
   const [frameloop, setFrameloop] = useState("never");
   const [isGoodPerformance, setIsGoodPerformance] = useState(true);
+  const [showCanvas, setShowCanvas] = useState(false);
 
   const onIncline = () => {
     setIsGoodPerformance(true);
@@ -20,16 +21,30 @@ const Canvas = forwardRef((props, ref) => {
   };
 
   useEffect(() => {
-    const heroSection = document.querySelector('.hero-section');
-    if (!heroSection) return;
+    // Check if we're on desktop and not mobile
+    const isDesktop = window.innerWidth > 1024;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    const observer = new IntersectionObserver(([{ isIntersecting }]) => {
-      setFrameloop(isIntersecting ? "always" : "never");
-    }, {});
+    // Only show canvas on desktop and not on mobile devices
+    if (isDesktop && !isMobile) {
+      setShowCanvas(true);
+      
+      const heroSection = document.querySelector('.hero-section');
+      if (!heroSection) return;
+      
+      const observer = new IntersectionObserver(([{ isIntersecting }]) => {
+        setFrameloop(isIntersecting ? "always" : "never");
+      }, {});
 
-    observer.observe(heroSection);
-    return () => observer.disconnect();
+      observer.observe(heroSection);
+      return () => observer.disconnect();
+    }
   }, []);
+
+  // Don't render canvas on mobile or if showCanvas is false
+  if (!showCanvas) {
+    return null;
+  }
 
   return (
     <R3FCanvas

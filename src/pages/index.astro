@@ -3,21 +3,21 @@ import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
 import MyProjects from '../components/MyProjects.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
-import LoadingScreen from '../components/LoadingScreen.jsx';
 import Canvas from '../components/Canvas.jsx';
 ---
 
 <Layout title="Mathieu Elisabeth | Portfolio">
-  <LoadingScreen client:load />
   <div id="smooth-wrapper">
     <div id="smooth-content">
       <Navbar />
       <main class="main">
         <Hero />
         <About />
+        <Experience />
         <MyProjects />
         <Contact />
       </main>
@@ -30,24 +30,9 @@ import Canvas from '../components/Canvas.jsx';
 <script>
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { ReactLenis } from 'lenis/react';
 
   gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
   ScrollTrigger.normalizeScroll(true);
-
-  // Initialize smooth scrolling
-  const lenis = new Lenis({
-    autoRaf: false,
-    syncTouch: true,
-    syncTouchLerp: 0.1
-  });
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-
-  requestAnimationFrame(raf);
 
   // Page transition functionality
   function initPageTransitions() {
