@@ -2,13 +2,13 @@ import { forwardRef, useRef } from "react";
 import { useGLTF, CubeCamera, MeshRefractionMaterial } from "@react-three/drei";
 import { RGBELoader } from "three-stdlib";
 
-const TEXTURE = new RGBELoader().load("/hdr/aerodynamics_workshop_1k.hdr");
+//const TEXTURE = new RGBELoader().load("/hdr/aerodynamics_workshop_1k.hdr");
 
 const Diamond = forwardRef((props, ref) => {
   const { nodes } = useGLTF("/model/diamond.glb");
 
   return (
-    <CubeCamera resolution={256} frames={1} envMap={TEXTURE}>
+    <CubeCamera resolution={256} frames={1}>
       {(texture) => (
         <mesh
           castShadow
