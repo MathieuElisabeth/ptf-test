@@ -6,7 +6,7 @@ import { experiences } from '../utils/experiences.js';
   <div class="experience-container">
     <h2>Expérience professionnelle</h2>
     <div class="experience-timeline">
-      <!-- SVG Timeline with DrawSVG -->
+      <!-- SVG Timeline -->
       <svg class="timeline-svg" viewBox="0 0 4 800" preserveAspectRatio="none">
         <defs>
           <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -29,6 +29,8 @@ import { experiences } from '../utils/experiences.js';
           stroke-width="3" 
           fill="none"
           filter="url(#glow)"
+          stroke-dasharray="1000"
+          stroke-dashoffset="1000"
         />
         <!-- Connection lines for each experience -->
         {experiences.map((_, index) => {
@@ -43,6 +45,8 @@ import { experiences } from '../utils/experiences.js';
               stroke="var(--green)" 
               stroke-width="2"
               opacity="0.7"
+              stroke-dasharray="30"
+              stroke-dashoffset="30"
             />
           );
         })}
@@ -457,12 +461,8 @@ import { experiences } from '../utils/experiences.js';
 <script>
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
-
-
-  // Register DrawSVGPlugin
-  gsap.registerPlugin(DrawSVGPlugin);
+  gsap.registerPlugin(ScrollTrigger);
 
   document.addEventListener('DOMContentLoaded', () => {
     const section = document.querySelector('.experience-section');
@@ -473,10 +473,6 @@ import { experiences } from '../utils/experiences.js';
     const timelinePoints = section?.querySelectorAll('.timeline-point');
     
     if (!section || !timelinePath) return;
-
-    // Set initial DrawSVG state
-    gsap.set(timelinePath, { drawSVG: "0%" });
-    gsap.set(connectionLines, { drawSVG: "0%" });
 
     // Create main timeline
     const masterTl = gsap.timeline({
@@ -495,21 +491,16 @@ import { experiences } from '../utils/experiences.js';
         y: 0,
         duration: 1,
         ease: 'power3.out'
-      })
-      .to(heading.querySelector('::after') || heading, {
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power2.out'
-      }, '-=0.3');
+      });
     }
 
-    // Animate main timeline path with DrawSVG
+    // Animate main timeline path using stroke-dashoffset
     masterTl.to(timelinePath, {
       opacity: 1,
       duration: 0.3
     })
     .to(timelinePath, {
-      drawSVG: "100%",
+      strokeDashoffset: 0,
       duration: 2,
       ease: 'power2.inOut'
     }, '-=0.1');
@@ -533,7 +524,8 @@ import { experiences } from '../utils/experiences.js';
       // Animate connection line
       if (connectionLine) {
         itemTl.to(connectionLine, {
-          drawSVG: "100%",
+          strokeDashoffset: 0,
+          opacity: 1,
           duration: 0.8,
           ease: 'power2.out'
         });
