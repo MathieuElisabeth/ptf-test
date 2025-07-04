@@ -467,6 +467,7 @@ import { experiences } from '../utils/experiences.js';
   document.addEventListener('DOMContentLoaded', () => {
     const section = document.querySelector('.experience-section');
     const heading = section?.querySelector('h2');
+    const headingUnderline = section?.querySelector('h2::after');
     const timelinePath = section?.querySelector('.timeline-path');
     const connectionLines = section?.querySelectorAll('.connection-line');
     const experienceItems = section?.querySelectorAll('.experience-item');
@@ -474,100 +475,126 @@ import { experiences } from '../utils/experiences.js';
     
     if (!section || !timelinePath) return;
 
-    // Create main timeline
-    const masterTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top 70%',
-        end: 'bottom 30%',
-        toggleActions: 'play none none reverse',
-      }
-    });
-
-    // Animate heading with underline
+    // Animate heading first
     if (heading) {
-      masterTl.to(heading, {
+      gsap.to(heading, {
         opacity: 1,
         y: 0,
         duration: 1,
-        ease: 'power3.out'
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        }
+      });
+
+      // Animate heading underline
+      gsap.to(heading, {
+        '--after-opacity': 1,
+        duration: 0.8,
+        delay: 0.5,
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        }
       });
     }
 
-    // Animate main timeline path using stroke-dashoffset
-    masterTl.to(timelinePath, {
-      opacity: 1,
-      duration: 0.3
-    })
-    .to(timelinePath, {
-      strokeDashoffset: 0,
-      duration: 2,
-      ease: 'power2.inOut'
-    }, '-=0.1');
+    // Progressive timeline drawing based on scroll
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 60%',
+      end: 'bottom 20%',
+      scrub: 1,
+      onUpdate: (self) => {
+        // Calculate progress and animate timeline path
+        const progress = self.progress;
+        const dashOffset = 1000 - (1000 * progress);
+        
+        gsap.set(timelinePath, {
+          opacity: 1,
+          strokeDashoffset: dashOffset
+        });
+      }
+    });
 
-    // Animate experience items with enhanced effects
+    // Animate each experience item individually
     experienceItems.forEach((item, index) => {
       const point = timelinePoints[index];
       const connectionLine = connectionLines[index];
       const tasks = item.querySelectorAll('.task-item');
       const taskBullets = item.querySelectorAll('.task-bullet');
       
-      // Create individual timeline for each experience
+      // Create timeline for each experience
       const itemTl = gsap.timeline({
         scrollTrigger: {
           trigger: item,
-          start: 'top 80%',
+          start: 'top 75%',
           toggleActions: 'play none none reverse',
         }
       });
 
-      // Animate connection line
+      // Animate connection line first
       if (connectionLine) {
         itemTl.to(connectionLine, {
           strokeDashoffset: 0,
           opacity: 1,
-          duration: 0.8,
+          duration: 0.6,
           ease: 'power2.out'
         });
       }
 
-      // Animate timeline point with multiple elements
+      // Animate timeline point with enhanced effects
       if (point) {
         const pointInner = point.querySelector('.point-inner');
         const pointRing = point.querySelector('.point-outer-ring');
         const pointNumber = point.querySelector('.point-number');
+        const pointPulse = point.querySelector('.point-pulse');
 
+        // Point appears with bounce effect
         itemTl.to(point, {
           opacity: 1,
           scale: 1,
           duration: 0.8,
           ease: 'back.out(2)',
-        }, '-=0.4')
+        }, '-=0.3')
+        
+        // Outer ring appears
         .to(pointRing, {
           opacity: 0.6,
           scale: 1,
           duration: 0.6,
           ease: 'power2.out'
-        }, '-=0.6')
+        }, '-=0.5')
+        
+        // Number appears
         .to(pointNumber, {
           opacity: 1,
           duration: 0.4,
-          ease: 'power2.out',
+          ease: 'power2.out'
+        }, '-=0.3')
+        
+        // Start pulse animation
+        .to(pointPulse, {
+          opacity: 0.8,
+          duration: 0.1,
           onComplete: () => {
             point.classList.add('animated');
           }
-        }, '-=0.3');
+        }, '-=0.2');
       }
 
-      // Animate experience content with stagger
+      // Animate experience content
       itemTl.to(item, {
         opacity: 1,
         x: 0,
         duration: 1,
         ease: 'power3.out'
-      }, '-=0.5');
+      }, '-=0.6');
 
-      // Animate task bullets first, then text
+      // Animate task bullets with stagger
       if (taskBullets.length > 0) {
         itemTl.to(taskBullets, {
           opacity: 1,
@@ -575,23 +602,23 @@ import { experiences } from '../utils/experiences.js';
           duration: 0.4,
           stagger: 0.1,
           ease: 'back.out(1.7)'
-        }, '-=0.3');
+        }, '-=0.4');
       }
 
-      // Animate tasks with enhanced stagger
+      // Animate task text with stagger
       if (tasks.length > 0) {
         itemTl.to(tasks, {
           opacity: 1,
           x: 0,
           duration: 0.6,
-          stagger: 0.15,
+          stagger: 0.12,
           ease: 'power2.out'
-        }, '-=0.4');
+        }, '-=0.5');
       }
     });
 
     // Enhanced hover effects for timeline points
-    timelinePoints.forEach((point, index) => {
+    timelinePoints.forEach((point) => {
       const pointInner = point.querySelector('.point-inner');
       const pointRing = point.querySelector('.point-outer-ring');
       
@@ -628,27 +655,27 @@ import { experiences } from '../utils/experiences.js';
       }
     });
 
-    // Parallax effect for timeline elements
+    // Subtle parallax effect for the timeline
     gsap.to(timelinePath, {
-      yPercent: -15,
+      yPercent: -10,
       ease: 'none',
       scrollTrigger: {
         trigger: section,
         start: 'top bottom',
         end: 'bottom top',
-        scrub: 1
+        scrub: 2
       }
     });
 
     // Floating animation for timeline points
     timelinePoints.forEach((point, index) => {
       gsap.to(point, {
-        y: "+=10",
-        duration: 2 + (index * 0.3),
+        y: "+=8",
+        duration: 2.5 + (index * 0.3),
         ease: 'power1.inOut',
         yoyo: true,
         repeat: -1,
-        delay: index * 0.2
+        delay: index * 0.4
       });
     });
   });
