@@ -6,30 +6,56 @@ import { experiences } from '../utils/experiences.js';
   <div class="experience-container">
     <h2>Expérience professionnelle</h2>
     <div class="experience-timeline">
-      <!-- SVG Timeline -->
+      <!-- SVG Timeline with DrawSVG -->
       <svg class="timeline-svg" viewBox="0 0 4 800" preserveAspectRatio="none">
         <defs>
           <linearGradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style="stop-color:var(--green);stop-opacity:1" />
+            <stop offset="50%" style="stop-color:var(--green);stop-opacity:0.8" />
             <stop offset="100%" style="stop-color:var(--green);stop-opacity:0.3" />
           </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
         </defs>
         <path 
           class="timeline-path" 
           d="M2,0 L2,800" 
           stroke="url(#timelineGradient)" 
-          stroke-width="2" 
+          stroke-width="3" 
           fill="none"
-          pathLength="100"
+          filter="url(#glow)"
         />
+        <!-- Connection lines for each experience -->
+        {experiences.map((_, index) => {
+          const yPosition = 80 + (index * 200);
+          return (
+            <line 
+              class={`connection-line connection-${index}`}
+              x1="2" 
+              y1={yPosition} 
+              x2="30" 
+              y2={yPosition}
+              stroke="var(--green)" 
+              stroke-width="2"
+              opacity="0.7"
+            />
+          );
+        })}
       </svg>
 
       {experiences.map((exp, index) => (
         <article class="experience-item" data-index={index} key={index}>
-          <!-- Timeline Point -->
-          <div class="timeline-point">
+          <!-- Enhanced Timeline Point -->
+          <div class="timeline-point" data-point={index}>
+            <div class="point-outer-ring"></div>
             <div class="point-inner"></div>
             <div class="point-pulse"></div>
+            <div class="point-number">{index + 1}</div>
           </div>
           
           <div class="experience-content">
@@ -53,6 +79,7 @@ import { experiences } from '../utils/experiences.js';
               <ul role="list">
                 {exp.tasks.map((task, taskIndex) => (
                   <li key={taskIndex} role="listitem" class="task-item" data-task={taskIndex}>
+                    <span class="task-bullet"></span>
                     {task}
                   </li>
                 ))}
@@ -72,6 +99,18 @@ import { experiences } from '../utils/experiences.js';
     padding: 200px 0;
     min-height: 100vh;
     z-index: 2;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(74, 158, 255, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
 
     h2 {
       text-align: center;
@@ -80,6 +119,20 @@ import { experiences } from '../utils/experiences.js';
       font-size: 2.5rem;
       opacity: 0;
       transform: translateY(30px);
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: var(--green);
+        border-radius: 2px;
+        opacity: 0;
+      }
     }
   }
 
@@ -99,56 +152,77 @@ import { experiences } from '../utils/experiences.js';
 
   .experience-timeline {
     position: relative;
-    padding-left: 80px;
+    padding-left: 100px;
 
     @media (max-width: 768px) {
-      padding-left: 50px;
+      padding-left: 70px;
     }
   }
 
   .timeline-svg {
     position: absolute;
-    left: 30px;
+    left: 40px;
     top: 0;
-    width: 4px;
+    width: 40px;
     height: 100%;
     z-index: 1;
 
     @media (max-width: 768px) {
-      left: 15px;
+      left: 25px;
+      width: 35px;
     }
   }
 
   .timeline-path {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+
+  .connection-line {
+    opacity: 0;
   }
 
   .experience-item {
     position: relative;
-    margin-bottom: 4rem;
+    margin-bottom: 6rem;
     opacity: 0;
-    transform: translateX(-50px);
+    transform: translateX(-80px);
 
     &:last-child {
-      margin-bottom: 0;
+      margin-bottom: 2rem;
     }
   }
 
   .timeline-point {
     position: absolute;
-    left: -59px;
-    top: 20px;
-    width: 20px;
-    height: 20px;
-    z-index: 2;
+    left: -75px;
+    top: 30px;
+    width: 30px;
+    height: 30px;
+    z-index: 3;
     opacity: 0;
     transform: scale(0);
+    cursor: pointer;
 
     @media (max-width: 768px) {
-      left: -44px;
-      width: 18px;
-      height: 18px;
+      left: -55px;
+      width: 25px;
+      height: 25px;
+    }
+
+    .point-outer-ring {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 40px;
+      height: 40px;
+      border: 2px solid var(--green);
+      border-radius: 50%;
+      opacity: 0;
+      
+      @media (max-width: 768px) {
+        width: 35px;
+        height: 35px;
+      }
     }
 
     .point-inner {
@@ -158,7 +232,8 @@ import { experiences } from '../utils/experiences.js';
       border-radius: 50%;
       border: 4px solid var(--bg-color);
       position: relative;
-      z-index: 3;
+      z-index: 4;
+      box-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
     }
 
     .point-pulse {
@@ -170,39 +245,87 @@ import { experiences } from '../utils/experiences.js';
       background: var(--green);
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      opacity: 0.6;
-      z-index: 1;
+      opacity: 0;
+      z-index: 2;
+    }
+
+    .point-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--bg-color);
+      font-weight: bold;
+      font-size: 12px;
+      z-index: 5;
+      opacity: 0;
+
+      @media (max-width: 768px) {
+        font-size: 10px;
+      }
+    }
+
+    &:hover {
+      .point-inner {
+        transform: scale(1.2);
+        box-shadow: 0 0 30px rgba(74, 158, 255, 0.8);
+      }
+      
+      .point-outer-ring {
+        transform: scale(1.3);
+      }
     }
   }
 
   .experience-content {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--border-radius);
-    padding: 2rem;
+    border-radius: 12px;
+    padding: 2.5rem;
     border-left: 4px solid var(--green);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(74, 158, 255, 0.05) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
     &:hover {
       background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(74, 158, 255, 0.1);
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(74, 158, 255, 0.15);
+      border-left-width: 6px;
+
+      &::before {
+        opacity: 1;
+      }
     }
   }
 
   .experience-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   .experience-title {
     font-size: var(--fz-xl);
     color: var(--white);
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.75rem 0;
     font-weight: 600;
+    position: relative;
   }
 
   .experience-company {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 
     a {
       color: var(--green);
@@ -211,10 +334,26 @@ import { experiences } from '../utils/experiences.js';
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--green);
+        transition: width 0.3s ease;
+      }
 
       &:hover {
         color: var(--white);
         transform: translateX(5px);
+
+        &::after {
+          width: calc(100% - 20px);
+        }
       }
 
       i {
@@ -223,7 +362,7 @@ import { experiences } from '../utils/experiences.js';
       }
 
       &:hover i {
-        transform: translateX(3px);
+        transform: translateX(3px) scale(1.1);
       }
     }
   }
@@ -232,15 +371,13 @@ import { experiences } from '../utils/experiences.js';
     color: var(--light-slate);
     font-size: var(--fz-sm);
     font-family: var(--font-mono);
+    background: rgba(74, 158, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    display: inline-block;
   }
 
   .experience-tasks {
-    h4 {
-      margin: 0 0 1rem 0;
-      color: var(--white);
-      font-size: var(--fz-lg);
-    }
-
     ul {
       list-style: none;
       padding: 0;
@@ -249,46 +386,71 @@ import { experiences } from '../utils/experiences.js';
 
     .task-item {
       position: relative;
-      padding-left: 1.5rem;
-      margin-bottom: 0.75rem;
+      padding-left: 2rem;
+      margin-bottom: 1rem;
       color: var(--light-slate);
-      line-height: 1.6;
+      line-height: 1.7;
       opacity: 0;
-      transform: translateX(-20px);
+      transform: translateX(-30px);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
 
-      &::before {
-        content: '▸';
-        position: absolute;
-        left: 0;
-        color: var(--green);
-        font-weight: bold;
-        transition: transform 0.3s ease;
+      .task-bullet {
+        width: 6px;
+        height: 6px;
+        background: var(--green);
+        border-radius: 50%;
+        margin-top: 0.6rem;
+        flex-shrink: 0;
+        opacity: 0;
+        transform: scale(0);
       }
 
-      &:hover::before {
-        transform: translateX(3px);
+      &:hover {
+        color: var(--white);
+        
+        .task-bullet {
+          background: var(--white);
+          transform: scale(1.3);
+        }
       }
     }
   }
 
-  // Pulse animation for timeline points
+  // Enhanced pulse animation
   @keyframes pulse {
     0% {
       transform: translate(-50%, -50%) scale(1);
-      opacity: 0.6;
+      opacity: 0.8;
     }
     50% {
-      transform: translate(-50%, -50%) scale(1.5);
+      transform: translate(-50%, -50%) scale(2);
       opacity: 0.3;
     }
     100% {
-      transform: translate(-50%, -50%) scale(2);
+      transform: translate(-50%, -50%) scale(3);
       opacity: 0;
     }
   }
 
-  .timeline-point.animated .point-pulse {
-    animation: pulse 2s ease-out infinite;
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .timeline-point.animated {
+    .point-pulse {
+      animation: pulse 3s ease-out infinite;
+    }
+    
+    .point-outer-ring {
+      animation: rotate 20s linear infinite;
+    }
   }
 </style>
 
@@ -296,98 +458,160 @@ import { experiences } from '../utils/experiences.js';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+  // Register DrawSVGPlugin
+  gsap.registerPlugin(DrawSVGPlugin);
+
   document.addEventListener('DOMContentLoaded', () => {
     const section = document.querySelector('.experience-section');
     const heading = section?.querySelector('h2');
     const timelinePath = section?.querySelector('.timeline-path');
+    const connectionLines = section?.querySelectorAll('.connection-line');
     const experienceItems = section?.querySelectorAll('.experience-item');
     const timelinePoints = section?.querySelectorAll('.timeline-point');
     
     if (!section || !timelinePath) return;
 
+    // Set initial DrawSVG state
+    gsap.set(timelinePath, { drawSVG: "0%" });
+    gsap.set(connectionLines, { drawSVG: "0%" });
+
     // Create main timeline
-    const tl = gsap.timeline({
+    const masterTl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        start: 'top 80%',
-        end: 'bottom 20%',
+        start: 'top 70%',
+        end: 'bottom 30%',
         toggleActions: 'play none none reverse',
       }
     });
 
-    // Animate heading
+    // Animate heading with underline
     if (heading) {
-      tl.to(heading, {
+      masterTl.to(heading, {
         opacity: 1,
         y: 0,
-        duration: 0.8,
+        duration: 1,
         ease: 'power3.out'
-      });
+      })
+      .to(heading.querySelector('::after') || heading, {
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power2.out'
+      }, '-=0.3');
     }
 
-    // Animate timeline path drawing
-    tl.to(timelinePath, {
-      strokeDashoffset: 0,
-      duration: 1.5,
+    // Animate main timeline path with DrawSVG
+    masterTl.to(timelinePath, {
+      opacity: 1,
+      duration: 0.3
+    })
+    .to(timelinePath, {
+      drawSVG: "100%",
+      duration: 2,
       ease: 'power2.inOut'
-    }, '-=0.3');
+    }, '-=0.1');
 
-    // Animate experience items and timeline points
+    // Animate experience items with enhanced effects
     experienceItems.forEach((item, index) => {
       const point = timelinePoints[index];
+      const connectionLine = connectionLines[index];
       const tasks = item.querySelectorAll('.task-item');
+      const taskBullets = item.querySelectorAll('.task-bullet');
       
       // Create individual timeline for each experience
       const itemTl = gsap.timeline({
         scrollTrigger: {
           trigger: item,
-          start: 'top 85%',
+          start: 'top 80%',
           toggleActions: 'play none none reverse',
         }
       });
 
-      // Animate timeline point
-      if (point) {
-        itemTl.to(point, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.6,
-          ease: 'back.out(1.7)',
-          onComplete: () => {
-            point.classList.add('animated');
-          }
+      // Animate connection line
+      if (connectionLine) {
+        itemTl.to(connectionLine, {
+          drawSVG: "100%",
+          duration: 0.8,
+          ease: 'power2.out'
         });
       }
 
-      // Animate experience content
+      // Animate timeline point with multiple elements
+      if (point) {
+        const pointInner = point.querySelector('.point-inner');
+        const pointRing = point.querySelector('.point-outer-ring');
+        const pointNumber = point.querySelector('.point-number');
+
+        itemTl.to(point, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          ease: 'back.out(2)',
+        }, '-=0.4')
+        .to(pointRing, {
+          opacity: 0.6,
+          scale: 1,
+          duration: 0.6,
+          ease: 'power2.out'
+        }, '-=0.6')
+        .to(pointNumber, {
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power2.out',
+          onComplete: () => {
+            point.classList.add('animated');
+          }
+        }, '-=0.3');
+      }
+
+      // Animate experience content with stagger
       itemTl.to(item, {
         opacity: 1,
         x: 0,
-        duration: 0.8,
+        duration: 1,
         ease: 'power3.out'
-      }, '-=0.3');
+      }, '-=0.5');
 
-      // Animate tasks with stagger
+      // Animate task bullets first, then text
+      if (taskBullets.length > 0) {
+        itemTl.to(taskBullets, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          stagger: 0.1,
+          ease: 'back.out(1.7)'
+        }, '-=0.3');
+      }
+
+      // Animate tasks with enhanced stagger
       if (tasks.length > 0) {
         itemTl.to(tasks, {
           opacity: 1,
           x: 0,
-          duration: 0.5,
-          stagger: 0.1,
+          duration: 0.6,
+          stagger: 0.15,
           ease: 'power2.out'
         }, '-=0.4');
       }
     });
 
-    // Add hover effects for timeline points
-    timelinePoints.forEach(point => {
+    // Enhanced hover effects for timeline points
+    timelinePoints.forEach((point, index) => {
       const pointInner = point.querySelector('.point-inner');
+      const pointRing = point.querySelector('.point-outer-ring');
       
-      if (pointInner) {
+      if (pointInner && pointRing) {
         point.addEventListener('mouseenter', () => {
           gsap.to(pointInner, {
-            scale: 1.3,
-            duration: 0.3,
+            scale: 1.4,
+            boxShadow: '0 0 40px rgba(74, 158, 255, 0.8)',
+            duration: 0.4,
+            ease: 'power2.out'
+          });
+          gsap.to(pointRing, {
+            scale: 1.5,
+            opacity: 0.8,
+            duration: 0.4,
             ease: 'power2.out'
           });
         });
@@ -395,16 +619,23 @@ import { experiences } from '../utils/experiences.js';
         point.addEventListener('mouseleave', () => {
           gsap.to(pointInner, {
             scale: 1,
-            duration: 0.3,
+            boxShadow: '0 0 20px rgba(74, 158, 255, 0.5)',
+            duration: 0.4,
+            ease: 'power2.out'
+          });
+          gsap.to(pointRing, {
+            scale: 1,
+            opacity: 0.6,
+            duration: 0.4,
             ease: 'power2.out'
           });
         });
       }
     });
 
-    // Parallax effect for timeline
+    // Parallax effect for timeline elements
     gsap.to(timelinePath, {
-      yPercent: -20,
+      yPercent: -15,
       ease: 'none',
       scrollTrigger: {
         trigger: section,
@@ -412,6 +643,18 @@ import { experiences } from '../utils/experiences.js';
         end: 'bottom top',
         scrub: 1
       }
+    });
+
+    // Floating animation for timeline points
+    timelinePoints.forEach((point, index) => {
+      gsap.to(point, {
+        y: "+=10",
+        duration: 2 + (index * 0.3),
+        ease: 'power1.inOut',
+        yoyo: true,
+        repeat: -1,
+        delay: index * 0.2
+      });
     });
   });
 </script>
